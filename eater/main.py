@@ -1,9 +1,7 @@
-# main.py
 import pygame
 import random
 from constants import *
 from images import player_img, burger_img, fries_img 
-from time import sleep
 
 pygame.init()
 
