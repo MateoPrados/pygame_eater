@@ -7,3 +7,7 @@ player_img = pygame.transform.scale(player_img, (50, 50))
 # Cargar la imagen de la hamburguesa
 burger_img = pygame.image.load('resources/hamburger.png')
 burger_img = pygame.transform.scale(burger_img, (30, 30))
+
+fries_img = pygame.image.load('resources/fries.png')
+fries_img = pygame.transform.scale(fries_img, (30, 30))  
+
