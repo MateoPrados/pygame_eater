@@ -4,7 +4,7 @@ import random
 pygame.init()
 
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 300
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -29,13 +29,15 @@ hamburguesas_comidas = 0  # Contador de hamburguesas comidas
 # Fuente para el contador
 font = pygame.font.SysFont(None, 36)
 
+# Tiempo máximo en segundos (1 minuto y 30 segundos)
+TIEMPO_MAXIMO = 10
+tiempo_transcurrido = 0
+
 game = True
 paused = False
 
 while game:
     clock.tick(FPS)
-
-    screen.fill((0,0,0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -43,8 +45,10 @@ while game:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused  # Cambiar el estado de pausa
-                if not paused:  # Si se reanuda el juego, reiniciar el contador
+                if not paused:  # Si se reanuda el juego, reiniciar el contador y las hamburguesas
+                    tiempo_transcurrido = 0
                     hamburguesas_comidas = 0
+                    burgers.clear()
 
     if not paused:
         # Control de movimiento del jugador
@@ -59,6 +63,7 @@ while game:
             player_rect.move_ip(0, 1)
 
         # Dibujar la imagen del jugador en el rectángulo
+        screen.fill((0,0,0))  # Limpiar pantalla
         screen.blit(player_img, player_rect)
 
         # Generar hamburguesas aleatorias
@@ -77,7 +82,13 @@ while game:
             if player_rect.colliderect(burger_rect):
                 burgers.remove(burger)
                 hamburguesas_comidas += 1
-                print("Hamburguesas comidas:", hamburguesas_comidas)
+
+        # Actualizar contador de tiempo
+        tiempo_transcurrido += 1 / FPS
+
+        # Verificar si el tiempo excede el límite
+        if tiempo_transcurrido >= TIEMPO_MAXIMO:
+            paused = True
 
         # Mostrar contador en la parte superior de la pantalla
         text_surface = font.render("Hamburguesas comidas: " + str(hamburguesas_comidas), True, (255, 255, 255))
@@ -89,9 +100,20 @@ while game:
         text = font.render("Paused", True, (255, 255, 255))
         screen.blit(text, (SCREEN_WIDTH // 2 - 70, SCREEN_HEIGHT // 2 - 25))
 
+        # Mostrar puntaje obtenido
+        puntaje_text = font.render(f"Puntaje: {hamburguesas_comidas}", True, (255, 255, 255))
+        screen.blit(puntaje_text, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 25))
+
+        # Mostrar opción de reiniciar
+        reiniciar_text = font.render("Presiona ESC para reiniciar", True, (255, 255, 255))
+        screen.blit(reiniciar_text, (SCREEN_WIDTH // 2 - 180, SCREEN_HEIGHT // 2 + 75))
+
     pygame.display.update()
 
 pygame.quit()
+
+
+
 
 
 
